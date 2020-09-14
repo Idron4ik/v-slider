@@ -15,11 +15,11 @@
       <div
         ref="slides"
         class="v-slider__items"
-        :style="{
+        :style="[{
           width: `${isSSR ? '10000' : data.width.container}%`,
           transform: `translateX(${data.translateX}%)`,
-          transitionDuration: `${data.transitionDuration}ms`,
-        }"
+        },
+        data.transitionDuration && {transitionDuration: `${data.transitionDuration}ms`}]"
       >
         <div
           v-for="(slide, i) in sliderData"
