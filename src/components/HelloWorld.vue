@@ -66,6 +66,9 @@
         <div> {{ item.name }}</div>
       </template>
     </VSlider>
+
+    <h1>0: 2 \ 600: 1 \ 1024: fixedWidth 224</h1>
+
     <VSlider
         :sliderData="sliderData"
         :slidesToShow="1.4"

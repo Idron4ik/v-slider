@@ -210,7 +210,6 @@ export default {
       let scrollDistance = -this.data.width.slide * this.data.index;
 
       /* If slide is last element then will scroll to him  */
-
       if (this.data.countItems % this.settings.slidesToShow !== 0 && this.data.index + this.settings.slidesToShow >= this.data.countItems) {
         scrollDistance = -this.data.width.slide * (this.data.countItems - this.settings.slidesToShow);
       }
