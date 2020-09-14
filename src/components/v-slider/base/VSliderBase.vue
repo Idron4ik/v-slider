@@ -1,7 +1,7 @@
 <template>
   <div
     ref="slider"
-    :class="['v-slider', {'v-slide--ssr': isSSR}]"
+    :class="['v-slider', {'v-slide--ssr': isSSR, 'v-slider--loaded' : data.isLoaded}]"
   >
     <div
       :class="['v-slider__wrapper',
@@ -15,11 +15,11 @@
       <div
         ref="slides"
         class="v-slider__items"
-        :style="{
+        :style="[{
           width: `${isSSR ? '10000' : data.width.container}%`,
           transform: `translateX(${data.translateX}%)`,
-          transitionDuration: `${data.transitionDuration}ms`,
-        }"
+        },
+        data.transitionDuration && {transitionDuration: `${data.transitionDuration}ms`}]"
       >
         <div
           v-for="(slide, i) in sliderData"
@@ -69,10 +69,10 @@
 </template>
 
 <script>
-import helpers from '../mixins/helpers';
-import options from '../mixins/settings';
-import handlers from '../mixins/handlers';
-import methods from '../mixins/methods';
+import helpers from './../mixins/helpers';
+import options from './../mixins/settings';
+import handlers from './../mixins/handlers';
+import methods from './../mixins/methods';
 
 export default {
   name: 'VSlider',
@@ -96,27 +96,30 @@ export default {
         oldSettings: null,
         breakpoint: [],
         transitionDuration: 0,
+        isLoaded: false,
         width: {
           container: 0,
           wrapper: 0,
           slide: 0,
-          window: 0,
-        },
+          window: 0
+        }
       },
 
       pos: {
         x1: 0,
         x2: 0,
+        y1: 0,
+        y2: 0,
         final: 0,
         initial: 0,
         indexStart: 0,
-        current: 0,
+        current: 0
       },
 
       ids: {
         dragRequestAnimationFrameId: null,
-        resizeTimer: null,
-      },
+        resizeTimer: null
+      }
 
     };
   },
@@ -141,12 +144,13 @@ export default {
      * Initialization slider
      * */
     initSlider() {
-      this.data.slides = this.$refs.slides;
+      this.data.slides = this.$refs['slides'];
 
       this.data.countItems = this.sliderData.length;
 
       this.computedMetricsCarousel();
 
+      this.data.isLoaded = true;
       this.dispatchEvent('init');
     },
 
@@ -216,8 +220,8 @@ export default {
       setTimeout(this.transitionend, speed);
 
       this.dispatchEvent('beforeChange');
-    },
-  },
+    }
+  }
 };
 </script>
  <style lang="scss">
@@ -277,9 +281,11 @@ export default {
         font-size: 17px;
         color: #fff;
         pointer-events: all;
+        opacity: 1;
 
         &.disabled {
           cursor: default;
+          opacity: 0.3;
         }
 
         &.prev {
