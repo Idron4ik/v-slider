@@ -11,7 +11,6 @@
       @touchstart="dragStart"
       @touchend="dragEnd"
       @touchmove="dragAction"
-      @mousedown="dragStart"
     >
       <div
         ref="slides"

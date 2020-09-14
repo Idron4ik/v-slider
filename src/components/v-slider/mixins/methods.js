@@ -62,7 +62,13 @@ const mixin = {
         }
       });
 
-      this.settings = !breakpoint && !index ? this.data.oldSettings : { ...this.data.oldSettings, ...this.settings.responsive[index].settings };
+      if (!breakpoint && !index) {
+        this.settings = this.data.oldSettings;
+      } else {
+        let tmp = this.settings.responsive.slice(0, index) || [];
+        tmp = tmp.reduce((acc, item) => ({ ...acc, ...item.settings }), {});
+        this.settings = { ...this.data.oldSettings, ...tmp, ...this.settings.responsive[index].settings };
+      }
     },
 
     /**
@@ -100,7 +106,22 @@ const mixin = {
       this.data.locked = false;
       this.data.translateX = this.pos.current;
     },
-  },
+
+    /**
+     * Prepare index before call goto
+     */
+    prepareGoTo (index) {
+      // If slide is a first element then will scroll to him
+      if (this.data.translateX > 0) index = 0;
+
+      // If slide is a last element then will scroll to him
+      if (index + this.settings.slidesToShow > this.data.countItems - 1) index = this.data.countItems - this.settings.slidesToShow;
+
+      this.data.locked = false;
+
+      this.goTo(index, 200);
+    }
+  }
 };
 
 export default mixin;
