@@ -25,6 +25,7 @@ const mixin = {
      * Start drag
      */
     dragStart (e) {
+      e.preventDefault();
       this.data.transitionDuration = 0;
       this.pos.initial = this.data.translateX;
 
