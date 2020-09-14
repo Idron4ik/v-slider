@@ -6,7 +6,7 @@ const mixin = {
     /**
      * Go next slide
      */
-    next() {
+    next () {
       if (!this.isLastElement) {
         this.goTo(this.data.index + this.settings.slidesToScroll);
       }
@@ -15,7 +15,7 @@ const mixin = {
     /**
      * Go previous slide
      */
-    prev() {
+    prev () {
       if (!this.isFirstElement) {
         this.goTo(this.data.index - this.settings.slidesToScroll);
       }
@@ -24,28 +24,29 @@ const mixin = {
     /**
      * Start drag
      */
-    dragStart(e) {
-      e.preventDefault();
+    dragStart (e) {
       this.data.transitionDuration = 0;
       this.pos.initial = this.data.translateX;
 
       this.pos.x1 = this.normalizeEvent(e).clientX;
+      // this.pos.y1 = this.normalizeEvent(e).clientY;
       this.pos.indexStart = this.getIndex();
       this.data.isDrag = true;
 
-      if (e.type !== 'touchstart') {
-        document.onmouseup = this.dragEnd;
-        document.onmousemove = this.dragAction;
-      }
+      // if (e.type !== 'touchstart') {
+      //   document.onmouseup = this.dragEnd;
+      //   document.onmousemove = this.dragAction;
+      // }
     },
 
     /**
      * Dragging
      * @param e
      */
-    dragAction(e) {
-      this.$emit('drag', this);
+    dragAction (e) {
       this.pos.x2 = this.pos.x1 - this.normalizeEvent(e).clientX;
+      // if (Math.abs(distance) < this.settings.swipeDistance) return;
+
       this.pos.current = (-this.data.width.slide * this.pos.indexStart) + (this.convertPixelsToPercent(-(this.pos.x2) * this.settings.slidesToShow));
 
       if (!this.data.locked) {
@@ -57,20 +58,20 @@ const mixin = {
     /**
      * Pagination Handler
      */
-    goToSlide(x) {
+    goToSlide (x) {
       this.goTo(x * Math.round(this.settings.slidesToShow));
     },
 
     /**
      * Finished drag
      */
-    dragEnd() {
+    dragEnd () {
       if (this.data.locked) {
         cancelAnimationFrame(this.ids.dragRequestAnimationFrameId);
       }
 
-      document.onmouseup = null;
-      document.onmousemove = null;
+      // document.onmouseup = null;
+      // document.onmousemove = null;
 
       this.data.isDrag = false;
 
@@ -81,23 +82,12 @@ const mixin = {
       // Checks a need do scroll
 
       if (Math.abs(swipeDistance) < this.settings.swipeDistance) {
-        this.data.translateX = this.pos.initial;
-        return;
+        this.prepareGoTo(this.getIndex());
+      } else {
+        this.prepareGoTo(Math.abs(Math[swipeDistance > 0 ? 'ceil' : 'floor'](this.data.translateX / this.data.width.slide)));
       }
-
-      let swipeIndex = this.getIndex();
-
-      // If slide is a first element then will scroll to him
-      if (this.data.translateX > 0) swipeIndex = 0;
-
-      // If slide is a last element then will scroll to him
-      if (swipeIndex + this.settings.slidesToShow > this.data.countItems - 1) swipeIndex = this.data.countItems - this.settings.slidesToShow;
-
-      this.data.locked = false;
-
-      this.goTo(swipeIndex, 200);
-    },
-  },
+    }
+  }
 };
 
 export default mixin;

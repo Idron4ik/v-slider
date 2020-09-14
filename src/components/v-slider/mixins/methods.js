@@ -10,12 +10,12 @@ const mixin = {
      * @param ms
      * @returns {function}
      */
-    throttle(func, ms) {
+    throttle (func, ms) {
       let isThrottled = false;
       let savedArgs = null;
       let savedThis = null;
 
-      function wrapper() {
+      function wrapper () {
         if (isThrottled) {
           savedArgs = arguments;
           savedThis = this;
@@ -26,7 +26,7 @@ const mixin = {
 
         isThrottled = true;
 
-        setTimeout(() => {
+        setTimeout(function () {
           isThrottled = false;
           if (savedArgs) {
             wrapper.apply(savedThis, savedArgs);
@@ -44,14 +44,14 @@ const mixin = {
      * @param field
      * @returns { Object}
      */
-    orderBy(objs, field) {
-      return objs.sort((a, b) => ((a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0)));
+    orderBy (objs, field) {
+      return objs.sort((a, b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0));
     },
 
     /**
      * Set the settings of necessary breakpoint
      */
-    setSettingsOfCurrentBreakpoint() {
+    setSettingsOfCurrentBreakpoint () {
       let breakpoint = 0;
       let index = 0;
 
@@ -62,31 +62,41 @@ const mixin = {
         }
       });
 
-      this.settings = !breakpoint && !index ? this.data.oldSettings : { ...this.data.oldSettings, ...this.settings.responsive[index].settings };
+      if (!breakpoint && !index) {
+        this.settings = this.data.oldSettings;
+      } else {
+        let tmp = this.settings.responsive.slice(0, index) || [];
+        tmp = tmp.reduce((acc, item) => ({ ...acc, ...item.settings }), {});
+        this.settings = { ...this.data.oldSettings, ...tmp, ...this.settings.responsive[index].settings };
+      }
     },
 
     /**
      * Calculated metrics(width, counts, size) of carousel
      * */
 
-    computedMetricsCarousel() {
+    computedMetricsCarousel () {
       this.data.width.window = window.innerWidth;
 
       this.setSettingsOfCurrentBreakpoint();
 
+      this.data.width.wrapper = this.$refs['slider'].offsetWidth;
+
+      if (this.settings.fixedWidth) {
+        this.data.width.container = (this.settings.fixedWidth / this.data.width.wrapper) * 1000;
+        this.settings.slidesToShow = this.data.countItems / this.data.width.container * 100;
+      } else {
+        this.data.width.container = this.data.countItems * (100 / this.settings.slidesToShow);
+      }
+
       this.data.pages = Math.ceil(this.data.countItems / this.settings.slidesToShow);
-
-      this.data.width.container = this.data.countItems * (100 / this.settings.slidesToShow);
-
-      this.data.width.wrapper = this.$refs.slider.offsetWidth;
-
       this.data.width.slide = 100 / this.data.countItems;
     },
 
     /**
      * Method called after finish animation
      */
-    transitionend() {
+    transitionend () {
       this.data.locked = false;
       this.data.statusAnimationClass = false;
       this.data.transitionDuration = 0;
@@ -96,11 +106,26 @@ const mixin = {
     /**
      * Update Translate X in slider
      */
-    updatePosition() {
+    updatePosition () {
       this.data.locked = false;
       this.data.translateX = this.pos.current;
     },
-  },
+
+    /**
+     * Prepare index before call goto
+     */
+    prepareGoTo (index) {
+      // If slide is a first element then will scroll to him
+      if (this.data.translateX > 0) index = 0;
+
+      // If slide is a last element then will scroll to him
+      if (index + this.settings.slidesToShow > this.data.countItems - 1) index = this.data.countItems - this.settings.slidesToShow;
+
+      this.data.locked = false;
+
+      this.goTo(index, 200);
+    }
+  }
 };
 
 export default mixin;

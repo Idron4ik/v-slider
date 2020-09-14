@@ -1,7 +1,7 @@
 <template>
   <div
     ref="slider"
-    :class="['v-slider', {'v-slide--ssr': isSSR}]"
+    :class="['v-slider', {'v-slide--ssr': isSSR, 'v-slider--loaded' : data.isLoaded}]"
   >
     <div
       :class="['v-slider__wrapper',
@@ -11,7 +11,6 @@
       @touchstart="dragStart"
       @touchend="dragEnd"
       @touchmove="dragAction"
-      @mousedown="dragStart"
     >
       <div
         ref="slides"
@@ -70,17 +69,17 @@
 </template>
 
 <script>
-import helpers from '../mixins/helpers';
-import options from '../mixins/settings';
-import handlers from '../mixins/handlers';
-import methods from '../mixins/methods';
+import helpers from './../mixins/helpers';
+import options from './../mixins/settings';
+import handlers from './../mixins/handlers';
+import methods from './../mixins/methods';
 
 export default {
   name: 'VSlider',
 
   mixins: [helpers, options, handlers, methods],
 
-  data() {
+  data () {
     return {
       isSSR: true,
 
@@ -97,41 +96,44 @@ export default {
         oldSettings: null,
         breakpoint: [],
         transitionDuration: 0,
+        isLoaded: false,
         width: {
           container: 0,
           wrapper: 0,
           slide: 0,
-          window: 0,
-        },
+          window: 0
+        }
       },
 
       pos: {
         x1: 0,
         x2: 0,
+        y1: 0,
+        y2: 0,
         final: 0,
         initial: 0,
         indexStart: 0,
-        current: 0,
+        current: 0
       },
 
       ids: {
         dragRequestAnimationFrameId: null,
-        resizeTimer: null,
-      },
+        resizeTimer: null
+      }
 
     };
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     this.destroy();
     window.removeEventListener('resize', this.resize);
   },
 
-  beforeMount() {
+  beforeMount () {
     this.goTo = this.throttle(this.goTo, this.settings.speed);
   },
 
-  mounted() {
+  mounted () {
     this.isSSR = false;
     this.initSlider();
     window.addEventListener('resize', this.resize);
@@ -141,20 +143,21 @@ export default {
     /**
      * Initialization slider
      * */
-    initSlider() {
-      this.data.slides = this.$refs.slides;
+    initSlider () {
+      this.data.slides = this.$refs['slides'];
 
       this.data.countItems = this.sliderData.length;
 
       this.computedMetricsCarousel();
 
+      this.data.isLoaded = true;
       this.dispatchEvent('init');
     },
 
     /**
      * Reset settings to default
      * */
-    reset() {
+    reset () {
       this.data.index = 0;
       this.pos.indexStart = 0;
       this.data.translateX = 0;
@@ -164,7 +167,7 @@ export default {
      * Rebuild carousel
      * */
 
-    rebuild() {
+    rebuild () {
       this.reset();
       this.computedMetricsCarousel();
       this.dispatchEvent('rebuild');
@@ -173,7 +176,7 @@ export default {
     /**
      * Resize event
      * */
-    resize() {
+    resize () {
       clearTimeout(this.ids.resizeTimer);
 
       this.ids.resizeTimer = setTimeout(() => {
@@ -184,7 +187,7 @@ export default {
     /**
      * Destroy carousel
      * */
-    destroy() {
+    destroy () {
       // todo add destroy methods
       this.dispatchEvent('destroy');
     },
@@ -194,7 +197,7 @@ export default {
      * @param x
      * @param speed
      * */
-    goTo(x, speed = this.settings.speed) {
+    goTo (x, speed = this.settings.speed) {
       if (this.data.locked) return;
 
       this.data.index = this.normalizeIndex(x);
@@ -207,7 +210,6 @@ export default {
       let scrollDistance = -this.data.width.slide * this.data.index;
 
       /* If slide is last element then will scroll to him  */
-
       if (this.data.countItems % this.settings.slidesToShow !== 0 && this.data.index + this.settings.slidesToShow >= this.data.countItems) {
         scrollDistance = -this.data.width.slide * (this.data.countItems - this.settings.slidesToShow);
       }
@@ -217,14 +219,19 @@ export default {
       setTimeout(this.transitionend, speed);
 
       this.dispatchEvent('beforeChange');
-    },
-  },
+    }
+  }
 };
 </script>
  <style lang="scss">
     .v-slider {
       position: relative;
       width: 100%;
+      opacity: 0;
+
+      &--loaded {
+        opacity: 1;
+      }
 
       &__wrapper {
         overflow: hidden;
@@ -278,9 +285,11 @@ export default {
         font-size: 17px;
         color: #fff;
         pointer-events: all;
+        opacity: 1;
 
         &.disabled {
           cursor: default;
+          opacity: 0.3;
         }
 
         &.prev {

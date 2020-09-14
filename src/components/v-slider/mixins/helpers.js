@@ -7,7 +7,7 @@ const mixin = {
      * Checks if this is the first element
      * @returns {boolean}
      */
-    isFirstElement() {
+    isFirstElement () {
       return this.data.index <= 0;
     },
 
@@ -15,7 +15,7 @@ const mixin = {
      * Checks if this is the last element
      * @returns {boolean}
      */
-    isLastElement() {
+    isLastElement () {
       return this.data.index + this.settings.slidesToShow > this.data.countItems - 1;
     },
 
@@ -23,7 +23,7 @@ const mixin = {
      * Calculate the number of page
      * @returns {number}
      */
-    indexPage() {
+    indexPage () {
       let index = Math.round(this.data.index / this.settings.slidesToShow);
 
       if (index < 0) {
@@ -33,7 +33,7 @@ const mixin = {
       }
 
       return index;
-    },
+    }
   },
   methods: {
     /**
@@ -41,7 +41,7 @@ const mixin = {
      * @param pixels
      * @returns {number}
      */
-    convertPixelsToPercent(pixels) {
+    convertPixelsToPercent (pixels) {
       return pixels / this.data.width.wrapper * 100 / this.data.countItems;
     },
 
@@ -50,7 +50,7 @@ const mixin = {
      * @param percent
      * @returns {number}
      */
-    convertPercentToPixels(percent) {
+    convertPercentToPixels (percent) {
       return percent * this.data.width.wrapper / 100 * this.data.countItems;
     },
 
@@ -60,7 +60,7 @@ const mixin = {
      * @returns {Event}
      */
 
-    normalizeEvent(e) {
+    normalizeEvent (e) {
       return e.touches ? e.touches[0] : e;
     },
 
@@ -68,7 +68,7 @@ const mixin = {
      * Get number of slide in the real time
      * @returns {number}
      */
-    getIndex() {
+    getIndex () {
       return Math.abs(Math.round(this.data.translateX / this.data.width.slide));
     },
 
@@ -77,7 +77,7 @@ const mixin = {
      * @param x
      * @returns {number}
      */
-    normalizeIndex(x) {
+    normalizeIndex (x) {
       let index = x;
 
       if (x < 0) {
@@ -94,10 +94,10 @@ const mixin = {
      * @param {String} name - eventName
      */
 
-    dispatchEvent(name) {
+    dispatchEvent (name) {
       this.$emit(name, { data: this.data, settings: this.settings, pos: this.pos });
-    },
-  },
+    }
+  }
 };
 
 export default mixin;
