@@ -26,7 +26,7 @@ const mixin = {
 
         isThrottled = true;
 
-        setTimeout(() => {
+        setTimeout(function () {
           isThrottled = false;
           if (savedArgs) {
             wrapper.apply(savedThis, savedArgs);
@@ -45,7 +45,7 @@ const mixin = {
      * @returns { Object}
      */
     orderBy(objs, field) {
-      return objs.sort((a, b) => ((a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0)));
+      return objs.sort((a, b) => (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0));
     },
 
     /**
@@ -80,12 +80,16 @@ const mixin = {
 
       this.setSettingsOfCurrentBreakpoint();
 
-      this.data.pages = Math.ceil(this.data.countItems / this.settings.slidesToShow);
+      this.data.width.wrapper = this.$refs['slider'].offsetWidth;
 
+      if (this.settings.fixedWidth) {
+        this.data.width.container = (this.settings.fixedWidth / this.data.width.wrapper) * 1000;
+        this.settings.slidesToShow = this.data.countItems / this.data.width.container * 100;
+      } else {
       this.data.width.container = this.data.countItems * (100 / this.settings.slidesToShow);
+      }
 
-      this.data.width.wrapper = this.$refs.slider.offsetWidth;
-
+      this.data.pages = Math.ceil(this.data.countItems / this.settings.slidesToShow);
       this.data.width.slide = 100 / this.data.countItems;
     },
 

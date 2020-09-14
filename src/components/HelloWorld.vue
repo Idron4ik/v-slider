@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>0: 1 \ 600: fixedWidth 224 \ 1024: 4</h1>
     <VSlider
       :sliderData="sliderData"
       :slidesToShow="3.4"
@@ -131,6 +132,10 @@ export default {
 </script>
 
 <style lang="scss">
+  h1 {
+    font-family: 'Roboto', sans-serif;
+  }
+
   .v-slider {
     max-width: 1200px;
     width: 100%;

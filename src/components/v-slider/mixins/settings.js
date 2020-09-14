@@ -9,14 +9,22 @@ const settings = {
      */
     sliderData: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     /**
      * Enable dot indicators/pagination
      */
     dots: {
       type: Boolean,
-      default: true,
+      default: true
+    },
+
+    /**
+     * Fixed width a slide
+     */
+    fixedWidth: {
+      type: Number,
+      default: 0
     },
 
     /**
@@ -24,7 +32,7 @@ const settings = {
      */
     navButtons: {
       type: Boolean,
-      default: true,
+      default: true
     },
 
     /**
@@ -32,7 +40,7 @@ const settings = {
      */
     options: {
       type: Object,
-      default: () => ({}),
+      default: () => ({})
     },
 
     /**
@@ -40,7 +48,7 @@ const settings = {
      */
     responsive: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
 
     /**
@@ -48,7 +56,7 @@ const settings = {
      */
     slidesToShow: {
       type: Number,
-      default: 1,
+      default: 1
     },
 
     /**
@@ -56,7 +64,7 @@ const settings = {
      */
     slidesToScroll: {
       type: Number,
-      default: 1,
+      default: 1
     },
 
     /**
@@ -64,7 +72,7 @@ const settings = {
      */
     speed: {
       type: Number,
-      default: 300,
+      default: 300
     },
 
     /**
@@ -72,8 +80,8 @@ const settings = {
      */
     swipeDistance: {
       type: Number,
-      default: 100,
-    },
+      default: 100
+    }
   },
 
   created() {
@@ -101,8 +109,8 @@ const settings = {
 
       this.settings = initialSettings;
       this.data.oldSettings = this.settings;
-    },
-  },
+    }
+  }
 };
 
 export default settings;

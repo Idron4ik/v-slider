@@ -33,7 +33,7 @@ const mixin = {
       }
 
       return index;
-    },
+    }
   },
   methods: {
     /**
@@ -96,8 +96,8 @@ const mixin = {
 
     dispatchEvent(name) {
       this.$emit(name, { data: this.data, settings: this.settings, pos: this.pos });
-    },
-  },
+    }
+  }
 };
 
 export default mixin;
