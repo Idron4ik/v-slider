@@ -25,7 +25,6 @@ const mixin = {
      * Start drag
      */
     dragStart (e) {
-      e.preventDefault();
       this.data.transitionDuration = 0;
       this.pos.initial = this.data.translateX;
 
@@ -45,6 +44,7 @@ const mixin = {
      * @param e
      */
     dragAction (e) {
+      e.preventDefault();
       this.pos.x2 = this.pos.x1 - this.normalizeEvent(e).clientX;
       // if (Math.abs(distance) < this.settings.swipeDistance) return;
 

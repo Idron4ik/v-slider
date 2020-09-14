@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1> New</h1>
+    <h1> New 1</h1>
     <h1>0: 1 \ 600: fixedWidth 224 \ 1024: 4</h1>
     <VSlider
       :sliderData="sliderData"
@@ -25,7 +25,7 @@
         }]"
     >
       <template #slide="{item}">
-        <div> {{ item.name }}</div>
+        <div> {{ item.name }} <a href="/"> LINK</a></div>
       </template>
     </VSlider>
 
