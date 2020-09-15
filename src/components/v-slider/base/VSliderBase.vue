@@ -17,9 +17,8 @@
         class="v-slider__items"
         :style="[{
           width: `${isSSR ? '10000' : data.width.container}%`,
-          transform: `translateX(${data.translateX}%)`,
-        },
-        data.transitionDuration && {transitionDuration: `${data.transitionDuration}ms`}]"
+          transform: `translateX(${data.translateX}%)`
+        }, data.transitionDuration && {transitionDuration: `${data.transitionDuration}ms`}]"
       >
         <div
           v-for="(slide, i) in sliderData"
@@ -97,6 +96,7 @@ export default {
         breakpoint: [],
         transitionDuration: 0,
         isLoaded: false,
+        isDrag: false,
         width: {
           container: 0,
           wrapper: 0,

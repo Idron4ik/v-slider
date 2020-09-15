@@ -25,13 +25,12 @@ const mixin = {
      * Start drag
      */
     dragStart (e) {
-      this.data.transitionDuration = 0;
       this.pos.initial = this.data.translateX;
 
       this.pos.x1 = this.normalizeEvent(e).clientX;
-      // this.pos.y1 = this.normalizeEvent(e).clientY;
+      this.pos.y1 = this.normalizeEvent(e).clientY;
       this.pos.indexStart = this.getIndex();
-      this.data.isDrag = true;
+      this.data.isDrag = false;
 
       // if (e.type !== 'touchstart') {
       //   document.onmouseup = this.dragEnd;
@@ -44,10 +43,22 @@ const mixin = {
      * @param e
      */
     dragAction (e) {
-      e.preventDefault();
       this.pos.x2 = this.pos.x1 - this.normalizeEvent(e).clientX;
-      // if (Math.abs(distance) < this.settings.swipeDistance) return;
+      this.pos.y2 = this.pos.y1 - this.normalizeEvent(e).clientY;
 
+      if (!this.data.isDrag && Math.abs(this.pos.x2) > 30 && Math.abs(this.pos.y2) < 12) {
+        this.data.isDrag = true;
+        this.pos.x1 = this.pos.x1 + (this.pos.x2 > 0 ? -1 : 1) * 30;
+        this.pos.x2 = this.pos.x1 - this.normalizeEvent(e).clientX;
+        this.data.transitionDuration = 0;
+      }
+
+      if (this.data.isDrag) {
+        this.drag();
+      }
+    },
+
+    drag () {
       this.pos.current = (-this.data.width.slide * this.pos.indexStart) + (this.convertPixelsToPercent(-(this.pos.x2) * this.settings.slidesToShow));
 
       if (!this.data.locked) {
@@ -66,15 +77,15 @@ const mixin = {
     /**
      * Finished drag
      */
-    dragEnd () {
+    dragEnd (e) {
+      this.data.isDrag = false;
+
       if (this.data.locked) {
         cancelAnimationFrame(this.ids.dragRequestAnimationFrameId);
       }
 
       // document.onmouseup = null;
       // document.onmousemove = null;
-
-      this.data.isDrag = false;
 
       this.pos.final = this.data.translateX;
 
@@ -83,7 +94,7 @@ const mixin = {
       // Checks a need do scroll
 
       if (Math.abs(swipeDistance) < this.settings.swipeDistance) {
-        this.prepareGoTo(this.getIndex());
+        swipeDistance && this.prepareGoTo(this.getIndex());
       } else {
         this.prepareGoTo(Math.abs(Math[swipeDistance > 0 ? 'ceil' : 'floor'](this.data.translateX / this.data.width.slide)));
       }
