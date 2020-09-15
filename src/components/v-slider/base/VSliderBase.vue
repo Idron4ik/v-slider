@@ -17,7 +17,8 @@
         class="v-slider__items"
         :style="[{
           width: `${isSSR ? '10000' : data.width.container}%`,
-          transform: `translateX(${data.translateX}%)`
+          transform: `translateX(${data.translateX}%)`,
+          touchAction: 'pan-x',
         }, data.transitionDuration && {transitionDuration: `${data.transitionDuration}ms`}]"
       >
         <div
