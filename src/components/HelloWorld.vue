@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1> New 4</h1>
+    <h1> New 5</h1>
     <h1>0: 1 \ 600: fixedWidth 224 \ 1024: 4</h1>
     <VSlider
       :sliderData="sliderData"

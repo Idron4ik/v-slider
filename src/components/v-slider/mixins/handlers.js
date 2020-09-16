@@ -31,11 +31,6 @@ const mixin = {
       this.pos.y1 = this.normalizeEvent(e).clientY;
       this.pos.indexStart = this.getIndex();
       this.data.isDrag = false;
-
-      // if (e.type !== 'touchstart') {
-      //   document.onmouseup = this.dragEnd;
-      //   document.onmousemove = this.dragAction;
-      // }
     },
 
     /**
@@ -43,7 +38,6 @@ const mixin = {
      * @param e
      */
     dragAction (e) {
-      // e.preventDefault();
       this.pos.x2 = this.pos.x1 - this.normalizeEvent(e).clientX;
       this.pos.y2 = this.pos.y1 - this.normalizeEvent(e).clientY;
 
@@ -84,9 +78,6 @@ const mixin = {
       if (this.data.locked) {
         cancelAnimationFrame(this.ids.dragRequestAnimationFrameId);
       }
-
-      // document.onmouseup = null;
-      // document.onmousemove = null;
 
       this.pos.final = this.data.translateX;
 

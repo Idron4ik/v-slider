@@ -4,14 +4,13 @@
     :class="['v-slider', {'v-slide--ssr': isSSR, 'v-slider--loaded' : data.isLoaded}]"
   >
     <div
-      ref="slider"
       :class="['v-slider__wrapper',
                {'disabled': data.statusAnimationClass},
-               {'dragging': data.isDrag},
+               {'dragging': data.isDrag}
       ]"
-      style="touch-action: pan-y"
       @touchstart="dragStart"
       @touchend="dragEnd"
+      @touchmove="dragAction"
     >
       <div
         ref="slides"
@@ -127,7 +126,6 @@ export default {
 
   beforeDestroy () {
     this.destroy();
-    window.removeEventListener('resize', this.resize);
   },
 
   beforeMount () {
@@ -135,7 +133,6 @@ export default {
   },
 
   mounted () {
-    this.$refs['slides'].addEventListener('touchmove', this.dragAction, { passive: false });
     this.isSSR = false;
     this.initSlider();
     window.addEventListener('resize', this.resize);
@@ -190,7 +187,7 @@ export default {
      * Destroy carousel
      * */
     destroy () {
-      // todo add destroy methods
+      window.removeEventListener('resize', this.resize);
       this.dispatchEvent('destroy');
     },
 
@@ -239,6 +236,7 @@ export default {
         overflow: hidden;
         position: relative;
         z-index: 1;
+        touch-action: pan-y;
 
         &.dragging {
           pointer-events: none;
