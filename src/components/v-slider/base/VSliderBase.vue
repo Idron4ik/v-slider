@@ -7,8 +7,9 @@
       ref="slider"
       :class="['v-slider__wrapper',
                {'disabled': data.statusAnimationClass},
-               {'dragging': data.isDrag}
+               {'dragging': data.isDrag},
       ]"
+      style="touch-action: pan-y"
       @touchstart="dragStart"
       @touchend="dragEnd"
     >

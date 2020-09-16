@@ -43,9 +43,9 @@ const mixin = {
      * @param e
      */
     dragAction (e) {
+      // e.preventDefault();
       this.pos.x2 = this.pos.x1 - this.normalizeEvent(e).clientX;
       this.pos.y2 = this.pos.y1 - this.normalizeEvent(e).clientY;
-      !this.pos.y2 && e.cancelable && e.preventDefault();
 
       if (!this.data.isDrag && Math.abs(this.pos.x2) > 30 && Math.abs(this.pos.y2) < 12) {
         this.data.isDrag = true;
