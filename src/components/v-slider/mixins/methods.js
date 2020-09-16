@@ -83,13 +83,14 @@ const mixin = {
       this.data.width.wrapper = this.$refs['slider'].offsetWidth;
 
       if (this.settings.fixedWidth) {
-        this.data.width.container = (this.settings.fixedWidth / this.data.width.wrapper) * 1000;
+        this.data.width.container = (this.settings.fixedWidth / this.data.width.wrapper) * this.data.countItems * 100;
         this.settings.slidesToShow = this.data.countItems / this.data.width.container * 100;
       } else {
         this.data.width.container = this.data.countItems * (100 / this.settings.slidesToShow);
       }
 
       this.data.pages = Math.ceil(this.data.countItems / this.settings.slidesToShow);
+
       this.data.width.slide = 100 / this.data.countItems;
     },
 

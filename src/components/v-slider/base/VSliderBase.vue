@@ -4,21 +4,20 @@
     :class="['v-slider', {'v-slide--ssr': isSSR, 'v-slider--loaded' : data.isLoaded}]"
   >
     <div
+      ref="slider"
       :class="['v-slider__wrapper',
                {'disabled': data.statusAnimationClass},
                {'dragging': data.isDrag}
       ]"
       @touchstart="dragStart"
       @touchend="dragEnd"
-      @touchmove="dragAction"
     >
       <div
         ref="slides"
         class="v-slider__items"
         :style="[{
           width: `${isSSR ? '10000' : data.width.container}%`,
-          transform: `translateX(${data.translateX}%)`,
-          touchAction: 'pan-x',
+          transform: `translate3d(${data.translateX}%, 0, 0)`
         }, data.transitionDuration && {transitionDuration: `${data.transitionDuration}ms`}]"
       >
         <div
@@ -135,6 +134,7 @@ export default {
   },
 
   mounted () {
+    this.$refs['slides'].addEventListener('touchmove', this.dragAction, { passive: false });
     this.isSSR = false;
     this.initSlider();
     window.addEventListener('resize', this.resize);
@@ -262,7 +262,6 @@ export default {
       }
 
       &__item {
-        cursor: pointer;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -290,15 +289,15 @@ export default {
 
         &.disabled {
           cursor: default;
-          opacity: 0.3;
+          pointer-events: all;
         }
 
         &.prev {
-          left: 0;
+          left: 10px;
         }
 
         &.next {
-          right: 0;
+          right: 10px;
         }
       }
 

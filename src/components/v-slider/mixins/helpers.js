@@ -24,7 +24,7 @@ const mixin = {
      * @returns {number}
      */
     indexPage () {
-      let index = Math.round(this.data.index / this.settings.slidesToShow);
+      let index = Math.round(this.data.index / Math.round(this.settings.slidesToShow));
 
       if (index < 0) {
         index = 0;
